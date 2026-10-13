@@ -24,8 +24,8 @@ cp .env.example .env.local
 الأسماء:
 
 - `NEXT_PUBLIC_SUPABASE_URL` و `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` كما في دليل Supabase SSR الرسمي.
-- `SUPABASE_SECRET_KEY`: المفتاح السري، خادمي فقط، لا يبدأ بـ `NEXT_PUBLIC_`.
-- `AI_API_KEY` و `AI_BASE_URL` و `AI_MODEL`: مزود متوافق مع OpenAI. بدون `AI_API_KEY` يعمل وضع تطوير صريح (MockProvider) بجملة ثابتة وليست إجابة نموذج.
+- `SUPABASE_SECRET_KEY`: المفتاح السري، خادمي فقط. يقبل `sb_secret_` أو مفتاح `service_role` القديم (JWT) — جرّب الاثنين فبعض المشاريع لا يقبل `sb_secret_`.
+- `AI_API_KEY` و `AI_BASE_URL` و `AI_MODEL`: مزود متوافق مع OpenAI. الإعداد الحالي: NVIDIA NIM المجاني (`https://integrate.api.nvidia.com/v1` مع نموذج `z-ai/glm-5.3-flash`). بدون `AI_API_KEY` يعمل وضع تطوير صريح (MockProvider) بجملة ثابتة وليست إجابة نموذج.
 - `API_KEY_PEPPER` و `AUDIT_IP_PEPPER`: ملحا تجزئة عشوائيان.
 - `BOOTSTRAP_ADMIN_EMAIL`: بريد أول مدير.
 - `RESEND_API_KEY`: اختياري لإرسال تنبيه بريدي برسائل التواصل.

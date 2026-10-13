@@ -25,6 +25,33 @@ Test Files  6 passed (6)
 51 مسارًا: تسويق ثابت، تطبيق وإدارة و API ديناميكية، Proxy (Middleware) مفعّل
 ```
 
+## ربط NVIDIA NIM وتشغيل النموذج الحقيقي (تم)
+
+```
+> فحص /v1/models بالمفتاح: 80 نموذجًا (كثير منها 404 لهذا الحساب)
+> اختبار مرشحين بالبث:
+z-ai/glm-5.3-flash  -> أول رمز 1.1s، إجابة عربية صحيحة  (المختار)
+openai/gpt-oss-20b  -> أول رمز 34s (بداية باردة)، إجابة صحيحة (بديل مفعّل)
+البقية             -> 404 أو مهلة
+
+> تحديث ai_models و system_settings.default_model عبر Management API
+> npx wrangler secret put AI_API_KEY / AI_BASE_URL / AI_MODEL (بدون سطر نهائي عبر spawnSync)
+```
+
+اختبار شامل من طرف إلى طرف على النسخة المنشورة (مستخدم اختبار مؤقت عبر Admin API + مفتاح API مُجزّأ بالفلفل):
+
+```
+POST /api/v1/chat  -> 200
+model: z-ai/glm-5.3-flash
+usage: {"promptTokens":131,"completionTokens":11,"totalTokens":142}  (أرقام المزود)
+content: "عاصمة العراق هي بغداد."
+ثم حذف مستخدم الاختبار (cascade)
+```
+
+مشكلتان حُلّتا أثناء الربط:
+1. مفتاح `sb_secret_` في هذا المشروع يرفضه PostgREST («Invalid API key») — استُبدل بمفتاح `service_role` القديم في `SUPABASE_SECRET_KEY` محليًا وعلى الـWorker.
+2. إرسال قيمة السر عبر أنبوب PowerShell يضيف سطرًا جديدًا — أُعيد الضبط عبر `spawnSync` بمدخل بلا سطر نهائي.
+
 ## النشر الفعلي على Cloudflare Workers (تم)
 
 ```
