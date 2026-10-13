@@ -44,3 +44,10 @@ next-env.d.ts
 /playwright-report
 /test-results
 /playwright/.auth
+
+# opennext build output
+/.open-next/
+
+# wrangler local state
+/.wrangler/
+supabase/.temp/

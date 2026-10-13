@@ -1,0 +1,10 @@
+﻿// wrangler config for Nados AI on Cloudflare Workers
+{
+  "name": "nadosai",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  "workers_dev": true,
+  "observability": { "enabled": true }
+}

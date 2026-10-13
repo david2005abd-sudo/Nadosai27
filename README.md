@@ -100,6 +100,21 @@ Authorization: Bearer nados_...
 
 الاستجابة JSON غير متدفق. أنشئ المفتاح من صفحة `/app/api-keys` بعد تسجيل الدخول.
 
+## النشر على Cloudflare Workers
+
+المشروع منشور عبر OpenNext (`@opennextjs/cloudflare`) على Workers مع الأصول الثابتة:
+
+```bash
+npx opennextjs-cloudflare build
+npx opennextjs-cloudflare deploy
+```
+
+- التهيئة في `wrangler.jsonc` (nodejs_compat + assets binding).
+- `NEXT_PUBLIC_*` تُثبَّت وقت البناء من `.env.local`؛ عدّل `NEXT_PUBLIC_SITE_URL` إلى رابط workers.dev قبل إعادة البناء.
+- الأسرار تُضبط مرة واحدة: `npx wrangler secret put SUPABASE_SECRET_KEY` (ومثلها `API_KEY_PEPPER` و`AUDIT_IP_PEPPER`).
+- رقعتان في `patches/` تُطبَّقان تلقائيًا عبر postinstall (patch-package): نسخ بدل symlinks على Windows في `@opennextjs/aws`، وإضافة `preview-props.json` لقائمة المانيفستات في `@opennextjs/cloudflare` (مطلوب لـ Next 16.4).
+- بدون `AI_API_KEY` يعمل وضع التطوير (MockProvider) على النسخة المنشورة.
+
 ## حدود الخطط المجانية
 
 - Supabase Free: قاعدة 500 ميجابايت، إيقاف بعد أسبوع خمول، ورسائل المصادقة المدمجة محدودة المعدل (حوالي رسالتين في الساعة على القوالب المدمجة).

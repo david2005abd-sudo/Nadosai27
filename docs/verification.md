@@ -25,6 +25,41 @@ Test Files  6 passed (6)
 51 مسارًا: تسويق ثابت، تطبيق وإدارة و API ديناميكية، Proxy (Middleware) مفعّل
 ```
 
+## النشر الفعلي على Cloudflare Workers (تم)
+
+```
+> npx supabase link --project-ref pbntwnhfhdpwibttfmts
+> npx supabase db push
+Applying migration 0001_functions.sql ... 0014_rate_limit_windows.sql
+Finished supabase db push (14 migrations)
+
+> supabase seed (عبر Management API /database/query)
+HTTP 201 + تحقق: ai_models.gpt-4o-mini is_enabled=true، system_settings (40/80000)
+
+> npx wrangler secret put SUPABASE_SECRET_KEY / API_KEY_PEPPER / AUDIT_IP_PEPPER
+✨ Success (ثلاثة أسرار)
+
+> npx opennextjs-cloudflare build && npx opennextjs-cloudflare deploy
+Deployed nadosai → https://nadosai.nwr4930hq.workers.dev
+```
+
+فحص النسخة المنشورة (كل النتائج فعلية):
+
+```
+/                     -> 200 (عنوان عربي + rtl)
+/about /services /faq /contact /privacy /terms /login /signup /forgot-password -> 200
+/sitemap.xml /robots.txt -> 200
+/api/health           -> {"ok":true}
+/app (بلا جلسة)       -> 307 إلى /login?next=%2Fapp
+/_next/static/*.css|js -> 200
+/api/v1/chat بلا توكن -> 401 {"error":{"code":"unauthorized","message":"نص عربي"}}
+```
+
+مشكلتان حُلّتا أثناء النشر (موثقتان في patches/ عبر patch-package):
+1. OpenNext على Windows: فشل إنشاء symlinks (EPERM) — استُبدل بـ cpSync dereference في @opennextjs/aws.
+2. Next 16.4 يحمّل `preview-props.json` عند تهيئة الخادم وأسقط الـWorker بخطأ 1101 — أُضيف المانيفست لقائمة الالتقاط في @opennextjs/cloudflare.
+
+
 تسلسل الإصلاحات أثناء التحقق: خطأ تسمية مجلد المشروع (حروف كبيرة) حُلّ بإنشاء القالب في مجلد مؤقت ونقل الملفات، تعارض vitest مع @types/node@20 حُلّ بالترقية إلى ^22، ثم إصلاح 8 أخطاء أنواع (تصدير مخططات النماذج، params في Next 16، توقيع setAll في proxy، نمط join في بحث الرسائل)، ثم 3 إخفاقات اختبار (خوارزمية تحويل منتصف الليل المحلي كانت تتباعد فأعيدت بصياغة نقطة ثابتة، وتوقعَي اختبار صُحّحا وفق السلوك المطلوب).
 
 ## ما لم يُنفّذ هنا ولماذا (قابل للتحقق)
