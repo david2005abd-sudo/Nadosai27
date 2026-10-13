@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ar } from "@/messages/ar";
 import { marketingMetadata } from "@/lib/seo";
+import { AUTH_ENABLED } from "@/lib/constants";
 import { btnPrimary } from "@/components/ui/styles";
 
 export const metadata: Metadata = marketingMetadata(
@@ -48,9 +49,15 @@ export default function HomePage() {
           {ar.marketing.heroTitle}
         </h1>
         <p className="max-w-xl text-ink-2">{ar.marketing.heroDescription}</p>
-        <Link href="/signup" className={btnPrimary}>
-          {ar.marketing.ctaSignup}
-        </Link>
+        {AUTH_ENABLED ? (
+          <Link href="/signup" className={btnPrimary}>
+            {ar.marketing.ctaSignup}
+          </Link>
+        ) : (
+          <p className="rounded-xl border border-edge bg-surface px-4 py-3 text-sm text-ink-2">
+            {ar.marketing.accountsClosed}
+          </p>
+        )}
       </section>
 
       <section aria-label={ar.marketing.previewTitle} className="py-8">

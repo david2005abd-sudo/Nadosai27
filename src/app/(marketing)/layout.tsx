@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ar } from "@/messages/ar";
+import { AUTH_ENABLED } from "@/lib/constants";
 
 const navItems = [
   { href: "/", label: ar.nav.home },
@@ -28,20 +29,22 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
               </Link>
             ))}
           </nav>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/login"
-              className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-ink hover:bg-raised"
-            >
-              {ar.nav.login}
-            </Link>
-            <Link
-              href="/signup"
-              className="inline-flex min-h-11 items-center rounded-lg bg-accent px-4 text-sm font-medium text-accent-ink hover:opacity-90"
-            >
-              {ar.nav.signup}
-            </Link>
-          </div>
+          {AUTH_ENABLED ? (
+            <div className="flex items-center gap-2">
+              <Link
+                href="/login"
+                className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-ink hover:bg-raised"
+              >
+                {ar.nav.login}
+              </Link>
+              <Link
+                href="/signup"
+                className="inline-flex min-h-11 items-center rounded-lg bg-accent px-4 text-sm font-medium text-accent-ink hover:opacity-90"
+              >
+                {ar.nav.signup}
+              </Link>
+            </div>
+          ) : null}
         </div>
       </header>
       <main className="flex-1">{children}</main>
