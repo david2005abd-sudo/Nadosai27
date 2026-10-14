@@ -19,6 +19,13 @@ export function formatDateOnly(value: string | Date, timeZone = "Asia/Baghdad"):
   }).format(new Date(value));
 }
 
+export function formatTimeOnly(value: string | Date, timeZone = "Asia/Baghdad"): string {
+  return new Intl.DateTimeFormat("ar-IQ-u-nu-latn", {
+    timeStyle: "short",
+    timeZone,
+  }).format(new Date(value));
+}
+
 export function formatDuration(ms: number): string {
   if (ms < 1000) return `${formatNumber(Math.round(ms))} مللي ثانية`;
   return `${formatNumber(Math.round(ms / 100) / 10)} ثانية`;

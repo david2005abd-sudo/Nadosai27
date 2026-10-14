@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { ar } from "@/messages/ar";
+import { btnIconBare } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 
 export type ThemeChoice = "dark" | "light" | "system";
@@ -55,6 +56,23 @@ export function applyTheme(choice: ThemeChoice): void {
   }
   document.documentElement.setAttribute("data-theme", resolveTheme(choice));
   for (const listener of listeners) listener();
+}
+
+export function ThemeToggleButton() {
+  const choice = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const isLight = choice === "light";
+
+  return (
+    <button
+      type="button"
+      className={btnIconBare}
+      onClick={() => applyTheme(isLight ? "dark" : "light")}
+      aria-label={isLight ? ar.app.settings.themeDark : ar.app.settings.themeLight}
+      title={isLight ? ar.app.settings.themeDark : ar.app.settings.themeLight}
+    >
+      {isLight ? <Moon size={18} aria-hidden /> : <Sun size={18} aria-hidden />}
+    </button>
+  );
 }
 
 export function ThemeSwitch({ size = "md" }: { size?: "md" | "sm" }) {
