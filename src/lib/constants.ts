@@ -36,4 +36,4 @@ export const API_KEY_PREFIX_DISPLAY_LENGTH = 8;
 export const MOCK_PROVIDER_NAME = "mock";
 export const MOCK_MODEL = "mock-dev";
 
-export const AUTH_ENABLED = false;
+export const AUTH_ENABLED = true;
