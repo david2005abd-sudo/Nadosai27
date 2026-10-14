@@ -59,8 +59,22 @@ export async function proxy(request: NextRequest) {
     },
   });
 
+  // getClaims() verifies the JWT locally and returns null once it expires
+  // (default 1h), without attempting a refresh. Fall back to getUser(),
+  // which exchanges the refresh token for a fresh session, so an active
+  // user is never bounced to /login just because the access token aged out.
   const { data } = await supabase.auth.getClaims();
-  const claims = data?.claims as { sub?: string; app_metadata?: { role?: string } } | undefined;
+  let claims = data?.claims as { sub?: string; app_metadata?: { role?: string } } | undefined;
+
+  if (!claims?.sub) {
+    const { data: refreshed, error } = await supabase.auth.getUser();
+    if (!error && refreshed.user) {
+      claims = {
+        sub: refreshed.user.id,
+        app_metadata: refreshed.user.app_metadata as { role?: string },
+      };
+    }
+  }
 
   if (claims?.sub) {
     const isAdmin = claims.app_metadata?.role === "admin";
